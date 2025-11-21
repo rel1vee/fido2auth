@@ -24,7 +24,7 @@ Modul autentikasi multi-faktor berbasis FIDO2/WebAuthn untuk PrestaShop yang mem
 - **Passwordless Login**: Autentikasi tanpa kata sandi menggunakan security key atau biometrics
 - **Multi-Device Support**:
   - Hardware security keys (YubiKey, Google Titan, dll)
-  - Platform authenticators (Windows Hello, Touch ID, dll)
+  - Platform authenticators (Windows Hello, Touch ID, Face ID)
 - **Credential Management**: Interface user-friendly untuk mengelola security keys
 - **Backward Compatible**: Tetap mendukung autentikasi password tradisional
 - **Standards Compliant**: Implementasi penuh WebAuthn Level 2 (W3C) dan FIDO2
@@ -222,7 +222,7 @@ Untuk testing keamanan, gunakan tools berikut:
 # sqlmap - Test SQL injection
 
 # Test challenge reuse
-curl -X POST https://yourdomain.com/module/fido2auth/authentication \
+curl -X POST https://yourdomain.com/modules/fido2auth/authentication \
   -H "Content-Type: application/json" \
   -d '{"credential": {...}}'
 ```
@@ -327,23 +327,6 @@ try {
     error_log('Attestation error: ' . $e->getMessage());
     error_log('Stack trace: ' . $e->getTraceAsString());
 }
-```
-
-#### 5. Database Issues
-
-**Tables not created**:
-
-```sql
--- Manually run SQL dari sql/install.php
-CREATE TABLE IF NOT EXISTS `fido2_credentials` ...
-```
-
-**Permission errors**:
-
-```bash
-# Fix MySQL permissions
-GRANT ALL PRIVILEGES ON prestashop.* TO 'ps_user'@'localhost';
-FLUSH PRIVILEGES;
 ```
 
 ### Debug Mode

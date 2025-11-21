@@ -46,7 +46,6 @@ class Fido2Auth extends Module
 
     private function initializeServices(): void
     {
-        // Cek koneksi DB sebelum init repository untuk menghindari error saat install fresh
         if (!Module::isInstalled($this->name)) {
             return;
         }
@@ -168,7 +167,6 @@ class Fido2Auth extends Module
         }
 
         $customer = $params['customer'];
-        // Pastikan service terload
         if (!$this->credentialManager) $this->initializeServices();
 
         if ($this->credentialManager && $this->credentialManager->hasCredentials((int)$customer->id)) {
@@ -191,8 +189,6 @@ class Fido2Auth extends Module
         ) {
 
             $controller = $this->context->controller;
-
-            // Izinkan hanya controller Auth FIDO2 atau proses logout
             if (
                 !($controller instanceof Fido2AuthAuthenticationModuleFrontController) &&
                 $controller->php_self !== 'authentication'
