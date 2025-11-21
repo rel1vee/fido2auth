@@ -1,0 +1,16 @@
+/vendor/
+/cache/
+/log/
+/logs/
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+config_dev.xml
+local_config.php
+node_modules/
+package-lock.json
+yarn.lock
+*.zip

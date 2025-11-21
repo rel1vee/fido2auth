@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>fido2auth</name>
+    <displayName><![CDATA[MFA - FIDO2/WebAuthn]]></displayName>
+    <version><![CDATA[1.0.0]]></version>
+    <description><![CDATA[Advanced security with FIDO2-based multi-factor authentication.]]></description>
+    <author><![CDATA[Muh. Zaki Erbai Syas]]></author>
+    <tab><![CDATA[administration]]></tab>
+    <is_configurable>0</is_configurable>
+    <need_instance>1</need_instance>
+</module>

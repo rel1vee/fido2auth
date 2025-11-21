@@ -1,0 +1,220 @@
+/**
+ * FIDO2 Authentication Module - Frontend Styles
+ */
+
+/* Main containers */
+.fido2-registration-container,
+.fido2-authentication-container,
+.fido2-manage-container {
+  padding: 20px 0;
+}
+
+/* Cards */
+.fido2-registration-container .card,
+.fido2-authentication-container .card,
+.fido2-manage-container .card {
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Buttons with icons */
+.btn i.material-icons {
+  vertical-align: middle;
+  margin-right: 5px;
+  font-size: 20px;
+}
+
+/* Status alerts */
+#registration-status,
+#auth-status,
+#manage-status {
+  margin-top: 15px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Device name input */
+#device-name {
+  font-size: 16px;
+  padding: 12px;
+}
+
+/* Register button */
+#fido2-register-btn,
+#fido2-auth-btn {
+  font-size: 18px;
+  padding: 12px 30px;
+  transition: all 0.3s ease;
+}
+
+#fido2-register-btn:hover,
+#fido2-auth-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#fido2-register-btn:disabled,
+#fido2-auth-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Table styling */
+.credentials-table {
+  width: 100%;
+}
+
+.credentials-table td {
+  vertical-align: middle;
+  padding: 15px 10px;
+}
+
+.credentials-table .device-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.credentials-table .action-buttons {
+  white-space: nowrap;
+}
+
+.credentials-table .btn-sm {
+  padding: 5px 10px;
+  font-size: 13px;
+}
+
+/* Badges */
+.badge {
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge-warning {
+  background-color: #ffc107;
+  color: #333;
+}
+
+.badge-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+/* Login option styling */
+.fido2-login-option {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 5px;
+  margin: 20px 0;
+}
+
+.fido2-login-option .material-icons {
+  vertical-align: middle;
+  color: #007bff;
+}
+
+/* Customer account link */
+#fido2-manage-link {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  text-decoration: none;
+  display: block;
+  transition: all 0.3s ease;
+  margin-bottom: 15px;
+}
+
+#fido2-manage-link:hover {
+  background: #f8f9fa;
+  border-color: #007bff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#fido2-manage-link .link-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  font-weight: 600;
+}
+
+#fido2-manage-link .material-icons {
+  font-size: 30px;
+  margin-right: 10px;
+  color: #007bff;
+}
+
+/* Information boxes */
+.card-header.bg-info,
+.card-header.bg-primary {
+  color: white;
+}
+
+.card-header.bg-warning {
+  color: #333;
+}
+
+.card-header h3,
+.card-header h4 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.card-header .material-icons {
+  margin-right: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .fido2-registration-container,
+  .fido2-authentication-container,
+  .fido2-manage-container {
+    padding: 10px;
+  }
+
+  #fido2-register-btn,
+  #fido2-auth-btn {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  .credentials-table td {
+    padding: 10px 5px;
+    font-size: 14px;
+  }
+}
+
+/* Loading spinner */
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  border-width: 0.3em;
+}
+
+/* Empty state */
+.alert-info {
+  text-align: center;
+  padding: 30px;
+  font-size: 16px;
+}
