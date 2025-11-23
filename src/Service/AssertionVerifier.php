@@ -30,24 +30,9 @@ use PrestaShop\Module\Fido2Auth\Repository\CredentialRepository;
 
 class AssertionVerifier implements PublicKeyCredentialSourceRepository
 {
-    /**
-     * @var string
-     */
     private $rpId;
-
-    /**
-     * @var CredentialRepository
-     */
     private $credentialRepository;
-
-    /**
-     * @var PublicKeyCredentialLoader
-     */
     private $publicKeyCredentialLoader;
-
-    /**
-     * @var AuthenticatorAssertionResponseValidator
-     */
     private $assertionValidator;
 
     public function __construct(string $rpId, CredentialRepository $credentialRepository)
@@ -58,9 +43,6 @@ class AssertionVerifier implements PublicKeyCredentialSourceRepository
         $this->initializeValidators();
     }
 
-    /**
-     * Initialize WebAuthn validators
-     */
     private function initializeValidators(): void
     {
         // Algorithm Manager

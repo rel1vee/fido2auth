@@ -39,24 +39,9 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class AttestationValidator
 {
-    /**
-     * @var string
-     */
     private $rpId;
-
-    /**
-     * @var string
-     */
     private $rpName;
-
-    /**
-     * @var PublicKeyCredentialLoader
-     */
     private $publicKeyCredentialLoader;
-
-    /**
-     * @var AuthenticatorAttestationResponseValidator
-     */
     private $attestationValidator;
 
     public function __construct(string $rpId, string $rpName)
@@ -67,9 +52,6 @@ class AttestationValidator
         $this->initializeValidators();
     }
 
-    /**
-     * Initialize WebAuthn validators
-     */
     private function initializeValidators(): void
     {
         // Algorithm Manager with support for common algorithms

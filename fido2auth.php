@@ -191,9 +191,9 @@ class Fido2Auth extends Module
             $controller = $this->context->controller;
             if (
                 !($controller instanceof Fido2AuthAuthenticationModuleFrontController) &&
-                $controller->php_self !== 'authentication'
+                $controller->php_self !== 'authentication' &&
+                $controller->php_self !== 'password'
             ) {
-
                 Tools::redirect($this->context->link->getModuleLink('fido2auth', 'authentication'));
             }
         }

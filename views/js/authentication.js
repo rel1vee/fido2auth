@@ -59,7 +59,10 @@ class Fido2Authentication {
   }
 
   async getAuthenticationOptions(email) {
-    const body = email ? JSON.stringify({ email: email }) : null;
+    const body = JSON.stringify({
+      email: email,
+      token: prestashop.static_token,
+    });
 
     const response = await fetch(this.ajaxUrl + "&action=get_options", {
       method: "POST",
@@ -131,7 +134,10 @@ class Fido2Authentication {
     const response = await fetch(this.ajaxUrl + "&action=verify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ credential }),
+      body: JSON.stringify({
+        credential: credential,
+        token: prestashop.static_token,
+      }),
     });
 
     const data = await response.json();

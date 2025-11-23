@@ -16,19 +16,8 @@ use Link;
 
 class CredentialRepository
 {
-    /**
-     * @var string
-     */
     private $table;
-
-    /**
-     * @var string
-     */
     private $dbPrefix;
-
-    /**
-     * @var Link
-     */
     private $link;
 
     public function __construct(Link $link)
@@ -38,12 +27,6 @@ class CredentialRepository
         $this->link = $link;
     }
 
-    /**
-     * Save credential to database
-     *
-     * @param Fido2Credential $credential
-     * @return bool
-     */
     public function save(Fido2Credential $credential): bool
     {
         $data = [
@@ -80,12 +63,6 @@ class CredentialRepository
         }
     }
 
-    /**
-     * Find credential by ID
-     *
-     * @param int $id
-     * @return Fido2Credential|null
-     */
     public function findById(int $id): ?Fido2Credential
     {
         $query = new DbQuery();
@@ -98,12 +75,6 @@ class CredentialRepository
         return $row ? $this->hydrate($row) : null;
     }
 
-    /**
-     * Find credential by credential ID
-     *
-     * @param string $credentialId
-     * @return Fido2Credential|null
-     */
     public function findByCredentialId(string $credentialId): ?Fido2Credential
     {
         $query = new DbQuery();
@@ -117,12 +88,6 @@ class CredentialRepository
         return $row ? $this->hydrate($row) : null;
     }
 
-    /**
-     * Find all credentials for a customer
-     *
-     * @param int $customerId
-     * @return array
-     */
     public function findByCustomerId(int $customerId): array
     {
         $query = new DbQuery();
@@ -146,12 +111,6 @@ class CredentialRepository
         return $credentials;
     }
 
-    /**
-     * Get all credential IDs for a customer
-     *
-     * @param int $customerId
-     * @return array
-     */
     public function getCredentialIdsByCustomerId(int $customerId): array
     {
         $query = new DbQuery();
@@ -169,12 +128,6 @@ class CredentialRepository
         return array_column($rows, 'credential_id');
     }
 
-    /**
-     * Delete credential
-     *
-     * @param int $id
-     * @return bool
-     */
     public function delete(int $id): bool
     {
         return Db::getInstance()->delete(
@@ -183,12 +136,6 @@ class CredentialRepository
         );
     }
 
-    /**
-     * Soft delete credential (mark as inactive)
-     *
-     * @param int $id
-     * @return bool
-     */
     public function softDelete(int $id): bool
     {
         return Db::getInstance()->update(
@@ -198,12 +145,6 @@ class CredentialRepository
         );
     }
 
-    /**
-     * Count active credentials for a customer
-     *
-     * @param int $customerId
-     * @return int
-     */
     public function countByCustomerId(int $customerId): int
     {
         $query = new DbQuery();
@@ -215,13 +156,6 @@ class CredentialRepository
         return (int) Db::getInstance()->getValue($query);
     }
 
-    /**
-     * Update sign count for credential
-     *
-     * @param int $id
-     * @param int $signCount
-     * @return bool
-     */
     public function updateSignCount(int $id, int $signCount): bool
     {
         return Db::getInstance()->update(
@@ -234,12 +168,6 @@ class CredentialRepository
         );
     }
 
-    /**
-     * Hydrate entity from database row
-     *
-     * @param array $row
-     * @return Fido2Credential
-     */
     private function hydrate(array $row): Fido2Credential
     {
         $credential = new Fido2Credential();

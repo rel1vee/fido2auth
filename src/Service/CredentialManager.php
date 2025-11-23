@@ -14,9 +14,6 @@ use PrestaShop\Module\Fido2Auth\Repository\CredentialRepository;
 
 class CredentialManager
 {
-    /**
-     * @var CredentialRepository
-     */
     private $credentialRepository;
 
     public function __construct(CredentialRepository $credentialRepository)

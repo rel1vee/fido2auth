@@ -15,14 +15,7 @@ use PrestaShop\Module\Fido2Auth\Repository\ChallengeRepository;
 
 class ChallengeManager
 {
-    /**
-     * @var ChallengeRepository
-     */
     private $challengeRepository;
-
-    /**
-     * @var int Challenge timeout in seconds
-     */
     private $challengeTimeout;
 
     public function __construct(ChallengeRepository $challengeRepository, int $challengeTimeout = 300)
@@ -31,25 +24,15 @@ class ChallengeManager
         $this->challengeTimeout = $challengeTimeout;
     }
 
-    /**
-     * Generate a new registration challenge
-     *
-     * @param int $customerId
-     * @param string|null $userHandle
-     * @return array Challenge data for client
-     * @throws \Exception
-     */
-    public function generateRegistrationChallenge(int $customerId, ?string $userHandle = null): array
+    public function generateRegistrationChallenge(int $customerId): array
     {
         // Generate cryptographically secure random challenge
         $challengeBytes = random_bytes(32);
         $challenge = $this->base64UrlEncode($challengeBytes);
 
-        // Generate user handle if not provided
-        if ($userHandle === null) {
-            $userHandleBytes = random_bytes(16);
-            $userHandle = $this->base64UrlEncode($userHandleBytes);
-        }
+        // PERBAIKAN: User Handle harus konsisten untuk Customer ID yang sama
+        // Kita gunakan SHA-256 dari ID Customer agar panjangnya pas dan tidak menebak ID asli secara langsung
+        $userHandle = $this->base64UrlEncode(hash('sha256', (string)$customerId, true));
 
         // Create challenge entity
         $challengeEntity = new Fido2Challenge();
@@ -68,17 +51,10 @@ class ChallengeManager
         return [
             'challenge' => $challenge,
             'user_handle' => $userHandle,
-            'timeout' => $this->challengeTimeout * 1000, // Convert to milliseconds
+            'timeout' => $this->challengeTimeout * 1000,
         ];
     }
 
-    /**
-     * Generate a new authentication challenge
-     *
-     * @param int|null $customerId Optional customer ID for additional validation
-     * @return array Challenge data for client
-     * @throws \Exception
-     */
     public function generateAuthenticationChallenge(?int $customerId = null): array
     {
         // Generate cryptographically secure random challenge
@@ -100,18 +76,10 @@ class ChallengeManager
 
         return [
             'challenge' => $challenge,
-            'timeout' => $this->challengeTimeout * 1000, // Convert to milliseconds
+            'timeout' => $this->challengeTimeout * 1000,
         ];
     }
 
-    /**
-     * Validate and retrieve challenge
-     *
-     * @param string $challenge
-     * @param string $expectedType
-     * @return Fido2Challenge
-     * @throws \RuntimeException
-     */
     public function validateChallenge(string $challenge, string $expectedType): Fido2Challenge
     {
         // Find valid challenge
@@ -134,43 +102,21 @@ class ChallengeManager
         return $challengeEntity;
     }
 
-    /**
-     * Consume challenge (mark as used)
-     *
-     * @param string $challenge
-     * @return bool
-     */
     public function consumeChallenge(string $challenge): bool
     {
         return $this->challengeRepository->markAsUsed($challenge);
     }
 
-    /**
-     * Clean up expired challenges
-     *
-     * @return bool
-     */
     public function cleanupExpiredChallenges(): bool
     {
         return $this->challengeRepository->deleteExpired();
     }
 
-    /**
-     * Clean up used challenges older than specified hours
-     *
-     * @param int $hours
-     * @return bool
-     */
     public function cleanupUsedChallenges(int $hours = 24): bool
     {
         return $this->challengeRepository->deleteUsedOlderThan($hours);
     }
 
-    /**
-     * Get expiration time for challenge
-     *
-     * @return DateTime
-     */
     private function getExpirationTime(): DateTime
     {
         $expiresAt = new DateTime();
@@ -179,23 +125,11 @@ class ChallengeManager
         return $expiresAt;
     }
 
-    /**
-     * Base64URL encode
-     *
-     * @param string $data
-     * @return string
-     */
     private function base64UrlEncode(string $data): string
     {
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
 
-    /**
-     * Base64URL decode
-     *
-     * @param string $data
-     * @return string
-     */
     public function base64UrlDecode(string $data): string
     {
         $remainder = strlen($data) % 4;

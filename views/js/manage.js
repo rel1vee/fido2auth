@@ -40,6 +40,7 @@ class Fido2CredentialManager {
       credentials: "same-origin",
       body: JSON.stringify({
         credential_id: credentialId,
+        token: prestashop.static_token,
       }),
     });
 
@@ -65,6 +66,7 @@ class Fido2CredentialManager {
       body: JSON.stringify({
         credential_id: credentialId,
         device_name: deviceName,
+        token: prestashop.static_token,
       }),
     });
 

@@ -9,10 +9,6 @@ declare(strict_types=1);
 class Fido2AuthManageModuleFrontController extends ModuleFrontController
 {
     public $ssl = true;
-
-    /**
-     * @var Fido2Auth
-     */
     public $module;
 
     public function __construct()
@@ -24,9 +20,6 @@ class Fido2AuthManageModuleFrontController extends ModuleFrontController
         $this->authRedirection = 'my-account';
     }
 
-    /**
-     * Initialize controller
-     */
     public function init()
     {
         parent::init();
@@ -37,16 +30,18 @@ class Fido2AuthManageModuleFrontController extends ModuleFrontController
         }
     }
 
-    /**
-     * Post process - handle AJAX requests
-     */
     public function postProcess()
     {
         if (!$this->ajax) return;
-
-        // CLEAN BUFFER & SET HEADER
         if (ob_get_length()) ob_clean();
         header('Content-Type: application/json');
+
+        $rawInput = file_get_contents('php://input');
+        $postData = json_decode($rawInput, true);
+
+        if (!isset($postData['token']) || !Tools::isToken(false, $postData['token'])) {
+            die(json_encode(['success' => false, 'message' => 'Invalid security token']));
+        }
 
         $action = Tools::getValue('action');
 
@@ -72,9 +67,6 @@ class Fido2AuthManageModuleFrontController extends ModuleFrontController
         }
     }
 
-    /**
-     * List all credentials for current customer
-     */
     private function listCredentials()
     {
         $customer = $this->context->customer;
@@ -107,9 +99,6 @@ class Fido2AuthManageModuleFrontController extends ModuleFrontController
         }
     }
 
-    /**
-     * Delete a credential
-     */
     private function deleteCredential()
     {
         $customer = $this->context->customer;
@@ -158,9 +147,6 @@ class Fido2AuthManageModuleFrontController extends ModuleFrontController
         }
     }
 
-    /**
-     * Update credential device name
-     */
     private function updateCredentialName()
     {
         $customer = $this->context->customer;
@@ -206,9 +192,6 @@ class Fido2AuthManageModuleFrontController extends ModuleFrontController
         }
     }
 
-    /**
-     * Display credential management page
-     */
     public function initContent()
     {
         parent::initContent();

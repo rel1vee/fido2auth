@@ -13,10 +13,6 @@ use Nyholm\Psr7Server\ServerRequestCreator;
 class Fido2AuthRegistrationModuleFrontController extends ModuleFrontController
 {
     public $ssl = true;
-
-    /**
-     * @var Fido2Auth
-     */
     public $module;
 
     public function __construct()
@@ -28,9 +24,6 @@ class Fido2AuthRegistrationModuleFrontController extends ModuleFrontController
         $this->authRedirection = 'my-account';
     }
 
-    /**
-     * Initialize controller
-     */
     public function init()
     {
         parent::init();
@@ -41,16 +34,18 @@ class Fido2AuthRegistrationModuleFrontController extends ModuleFrontController
         }
     }
 
-    /**
-     * Post process - handle AJAX requests
-     */
     public function postProcess()
     {
         if (!$this->ajax) return;
-
-        // CLEAN BUFFER & SET HEADER
         if (ob_get_length()) ob_clean();
         header('Content-Type: application/json');
+
+        $rawInput = file_get_contents('php://input');
+        $postData = json_decode($rawInput, true);
+
+        if (!isset($postData['token']) || !Tools::isToken(false, $postData['token'])) {
+            die(json_encode(['success' => false, 'message' => 'Invalid security token']));
+        }
 
         $action = Tools::getValue('action');
 
@@ -71,9 +66,6 @@ class Fido2AuthRegistrationModuleFrontController extends ModuleFrontController
         }
     }
 
-    /**
-     * Get registration options (challenge)
-     */
     private function getRegistrationOptions()
     {
         $customer = $this->context->customer;
@@ -91,10 +83,7 @@ class Fido2AuthRegistrationModuleFrontController extends ModuleFrontController
             $credentialManager = $this->module->getCredentialManager();
 
             // Generate challenge
-            $challengeData = $challengeManager->generateRegistrationChallenge(
-                $customer->id,
-                null // Let the system generate user handle
-            );
+            $challengeData = $challengeManager->generateRegistrationChallenge($customer->id);
 
             // Get existing credentials to exclude
             $excludeCredentials = $credentialManager->getCustomerCredentialIds($customer->id);
@@ -160,9 +149,6 @@ class Fido2AuthRegistrationModuleFrontController extends ModuleFrontController
         }
     }
 
-    /**
-     * Verify registration response
-     */
     private function verifyRegistration()
     {
         $customer = $this->context->customer;
@@ -264,9 +250,6 @@ class Fido2AuthRegistrationModuleFrontController extends ModuleFrontController
         }
     }
 
-    /**
-     * Display registration page
-     */
     public function initContent()
     {
         parent::initContent();
@@ -292,20 +275,8 @@ class Fido2AuthRegistrationModuleFrontController extends ModuleFrontController
         $this->setTemplate('module:fido2auth/views/templates/front/registration.tpl');
     }
 
-    /**
-     * Get RP ID (domain)
-     *
-     * @return string
-     */
     private function getRpId(): string
     {
-        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-
-        // Remove port if present
-        if (strpos($host, ':') !== false) {
-            $host = explode(':', $host)[0];
-        }
-
-        return $host;
+        return \Tools::getShopDomain();
     }
 }

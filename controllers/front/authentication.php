@@ -27,11 +27,15 @@ class Fido2AuthAuthenticationModuleFrontController extends ModuleFrontController
     public function postProcess()
     {
         if (!$this->ajax) return;
-
-        // BERSIHKAN BUFFER OUTPUT SEBELUM KIRIM JSON
-        // Ini memperbaiki error "Unexpected token <"
         if (ob_get_length()) ob_clean();
         header('Content-Type: application/json');
+
+        $rawInput = file_get_contents('php://input');
+        $postData = json_decode($rawInput, true);
+
+        if (!isset($postData['token']) || !Tools::isToken(false, $postData['token'])) {
+            die(json_encode(['success' => false, 'message' => 'Invalid security token']));
+        }
 
         $action = Tools::getValue('action');
 
@@ -150,14 +154,27 @@ class Fido2AuthAuthenticationModuleFrontController extends ModuleFrontController
 
         $customer = new Customer($credential->getCustomerId());
 
+        if (!Validate::isLoadedObject($customer)) {
+            throw new Exception('User not found linked to this credential');
+        }
+
         if ($this->context->customer->isLogged() && $this->context->customer->id == $customer->id) {
+            // Case: User sudah login (Password), lalu verifikasi MFA
             unset($this->context->cookie->fido2_mfa_pending);
             $this->context->cookie->write();
         } else {
+            // Case: User login dari nol pakai FIDO2 (Passwordless)
             $this->context->cookie->fido2_login_bypass = true;
-            $this->context->updateCustomer($customer);
-            Hook::exec('actionAuthentication', ['customer' => $customer]);
 
+            // PrestaShop Login Flow
+            $this->context->updateCustomer($customer);
+
+            // Penting untuk cart retention
+            \CartRule::autoAddToCart($this->context);
+
+            \Hook::exec('actionAuthentication', ['customer' => $customer]);
+
+            // Bersihkan flag MFA jika ada (karena login via FIDO2 dianggap strong auth)
             if (isset($this->context->cookie->fido2_mfa_pending)) {
                 unset($this->context->cookie->fido2_mfa_pending);
             }
@@ -167,7 +184,7 @@ class Fido2AuthAuthenticationModuleFrontController extends ModuleFrontController
         die(json_encode([
             'success' => true,
             'message' => $this->l('Authentication successful'),
-            'redirect' => $this->context->link->getPageLink('my-account', true)
+            'redirect' => $this->context->link->getPageLink('my-account', true) // Atau 'index'
         ]));
     }
 
@@ -187,7 +204,6 @@ class Fido2AuthAuthenticationModuleFrontController extends ModuleFrontController
 
     private function getRpId(): string
     {
-        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        return explode(':', $host)[0];
+        return \Tools::getShopDomain();
     }
 }

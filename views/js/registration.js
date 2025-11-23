@@ -186,6 +186,7 @@ class Fido2Registration {
       body: JSON.stringify({
         credential: credential,
         device_name: deviceName,
+        token: prestashop.static_token,
       }),
     });
 

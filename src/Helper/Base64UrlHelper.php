@@ -10,24 +10,11 @@ namespace PrestaShop\Module\Fido2Auth\Helper;
 
 class Base64UrlHelper
 {
-    /**
-     * Base64URL encode
-     *
-     * @param string $data
-     * @return string
-     */
     public static function encode(string $data): string
     {
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
 
-    /**
-     * Base64URL decode
-     *
-     * @param string $data
-     * @return string
-     * @throws \InvalidArgumentException
-     */
     public static function decode(string $data): string
     {
         $remainder = strlen($data) % 4;
@@ -49,12 +36,6 @@ class Base64UrlHelper
         return $decoded;
     }
 
-    /**
-     * Check if string is valid base64url
-     *
-     * @param string $data
-     * @return bool
-     */
     public static function isValid(string $data): bool
     {
         try {
