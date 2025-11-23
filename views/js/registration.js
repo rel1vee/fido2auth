@@ -8,9 +8,6 @@ class Fido2Registration {
     this.isRegistering = false;
   }
 
-  /**
-   * Check if WebAuthn is supported
-   */
   isSupported() {
     return (
       window.PublicKeyCredential !== undefined &&
@@ -18,9 +15,6 @@ class Fido2Registration {
     );
   }
 
-  /**
-   * Base64URL decode
-   */
   base64UrlDecode(input) {
     input = input.replace(/-/g, "+").replace(/_/g, "/");
 
@@ -35,9 +29,6 @@ class Fido2Registration {
     return atob(input);
   }
 
-  /**
-   * Base64URL encode
-   */
   base64UrlEncode(arrayBuffer) {
     const bytes = new Uint8Array(arrayBuffer);
     let binary = "";
@@ -50,9 +41,6 @@ class Fido2Registration {
       .replace(/=/g, "");
   }
 
-  /**
-   * Convert base64url string to Uint8Array
-   */
   base64UrlToUint8Array(base64url) {
     const base64 = this.base64UrlDecode(base64url);
     const binary = atob(base64);
@@ -63,9 +51,6 @@ class Fido2Registration {
     return bytes;
   }
 
-  /**
-   * Start registration process
-   */
   async register(deviceName) {
     if (!this.isSupported()) {
       throw new Error("WebAuthn is not supported in this browser");
@@ -99,9 +84,6 @@ class Fido2Registration {
     }
   }
 
-  /**
-   * Get registration options from server
-   */
   async getRegistrationOptions() {
     const response = await fetch(this.ajaxUrl + "&action=get_options", {
       method: "POST",
@@ -120,9 +102,6 @@ class Fido2Registration {
     return data.options;
   }
 
-  /**
-   * Create credential using WebAuthn API
-   */
   async createCredential(options) {
     // Convert base64url strings to Uint8Array
     const publicKeyCredentialCreationOptions = {
@@ -173,9 +152,6 @@ class Fido2Registration {
     };
   }
 
-  /**
-   * Verify registration with server
-   */
   async verifyRegistration(credential, deviceName) {
     const response = await fetch(this.ajaxUrl + "&action=verify", {
       method: "POST",
@@ -200,7 +176,6 @@ class Fido2Registration {
   }
 }
 
-// Initialize when DOM is ready
 document.addEventListener("DOMContentLoaded", function () {
   const ajaxUrl = document.getElementById("fido2-ajax-url")?.value;
 

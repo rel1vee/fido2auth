@@ -7,9 +7,6 @@ class Fido2CredentialManager {
     this.ajaxUrl = ajaxUrl;
   }
 
-  /**
-   * Load credentials from server
-   */
   async loadCredentials() {
     const response = await fetch(this.ajaxUrl + "&action=list", {
       method: "POST",
@@ -28,9 +25,6 @@ class Fido2CredentialManager {
     return data.credentials;
   }
 
-  /**
-   * Delete credential
-   */
   async deleteCredential(credentialId) {
     const response = await fetch(this.ajaxUrl + "&action=delete", {
       method: "POST",
@@ -53,9 +47,6 @@ class Fido2CredentialManager {
     return data;
   }
 
-  /**
-   * Update credential device name
-   */
   async updateDeviceName(credentialId, deviceName) {
     const response = await fetch(this.ajaxUrl + "&action=update_name", {
       method: "POST",
@@ -79,9 +70,6 @@ class Fido2CredentialManager {
     return data;
   }
 
-  /**
-   * Format date
-   */
   formatDate(dateString) {
     if (!dateString) return "Never";
 
@@ -89,9 +77,6 @@ class Fido2CredentialManager {
     return date.toLocaleDateString() + " " + date.toLocaleTimeString();
   }
 
-  /**
-   * Render credentials list
-   */
   renderCredentials(credentials, container) {
     if (!container) return;
 
@@ -138,9 +123,6 @@ class Fido2CredentialManager {
     this.attachEventListeners(container);
   }
 
-  /**
-   * Escape HTML
-   */
   escapeHtml(text) {
     const map = {
       "&": "&amp;",
@@ -152,9 +134,6 @@ class Fido2CredentialManager {
     return text.replace(/[&<>"']/g, (m) => map[m]);
   }
 
-  /**
-   * Attach event listeners to buttons
-   */
   attachEventListeners(container) {
     // Delete buttons
     const deleteButtons = container.querySelectorAll(".delete-btn");
@@ -217,9 +196,6 @@ class Fido2CredentialManager {
     });
   }
 
-  /**
-   * Load and render credentials
-   */
   async loadAndRender() {
     const container = document.getElementById("credentials-list");
 
@@ -247,7 +223,6 @@ class Fido2CredentialManager {
   }
 }
 
-// Helper functions
 function showStatus(message, type) {
   const statusDiv = document.getElementById("manage-status");
   if (statusDiv) {
@@ -266,7 +241,6 @@ function hideStatus() {
   }
 }
 
-// Initialize when DOM is ready
 document.addEventListener("DOMContentLoaded", function () {
   const ajaxUrl = document.getElementById("fido2-manage-ajax-url")?.value;
 
