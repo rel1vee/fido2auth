@@ -12,9 +12,8 @@
     <div class="fido2-section-header">
         <div class="fido2-add-key-row">
             <div class="fido2-device-input-group">
-                <i class="material-icons" style="padding: 0 1rem;">devices</i>
                 <input type="text" id="fido2-device-name" class="form-control"
-                       placeholder="{l s='e.g. My Android Phone, Work Laptop' mod='fido2auth'}"
+                       placeholder="{l s='Device Name e.g. My Android Phone, Work Laptop, My YubiKey' mod='fido2auth'}"
                        maxlength="64" autocomplete="off">
             </div>
             <button id="fido2-add-key-btn" class="btn btn-primary">

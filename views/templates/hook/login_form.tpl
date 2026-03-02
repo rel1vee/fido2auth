@@ -62,9 +62,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 let friendlyMessage = error.message || 'Authentication Failed';
                 
                 if (error.name === 'NotAllowedError' || error.message.includes('cancel')) {
-                    friendlyMessage = "{l s='Action Cancelled...' mod='fido2auth'}";
+                    friendlyMessage = "{l s='Cancelled...' mod='fido2auth'}";
                 } else if (error.name === 'TimeoutError') {
-                    friendlyMessage = "{l s='Timed Out...' mod='fido2auth'}";
+                    friendlyMessage = "{l s='Timeout...' mod='fido2auth'}";
                 }
 
                 if (statusDiv) {
