@@ -33,11 +33,10 @@ A free, open-source PrestaShop module that adds **FIDO2/WebAuthn** multi-factor 
 
 ## 🚀 Installation
 
-1. Download the latest release `.zip` from the [Releases](https://github.com/rel1vee/fido2auth/releases) page (or download the repository as a `.zip`)
+1. Download the latest release `.zip` from the [Releases](https://github.com/rel1vee/fido2auth/releases) page
 2. Log in to your **PrestaShop Back Office**
 3. Go to **Modules → Module Manager**
 4. Click **Upload a module** and select the `.zip` file
-5. Click **Install** on the "MFA - FIDO2/WebAuthn" module
 
 The module will automatically:
 - Create the required database tables (`fido2_credentials`, `fido2_challenges`)
