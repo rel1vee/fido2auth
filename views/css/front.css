@@ -1,0 +1,304 @@
+:root {
+    --fido2-primary: #2fb5d2;
+    --fido2-primary-hover: #2592a9;
+    --fido2-text: #333333;
+    --fido2-text-muted: #6c757d;
+    --fido2-border: #e9ecef;
+    --fido2-bg-light: #f8f9fa;
+    --fido2-success: #28a745;
+    --fido2-error: #dc3545;
+    --fido2-radius: 0px;
+    --fido2-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --fido2-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* == Layout & Containers ============================= */
+
+.fido2-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    animation: fido2-fadeIn 0.4s ease-out;
+}
+
+@keyframes fido2-fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* == Components: Card ================================ */
+
+.fido2-card {
+    background: #fff;
+    border: 1px solid var(--fido2-border);
+    border-radius: var(--fido2-radius);
+    padding: 2.5rem;
+    text-align: center;
+    box-shadow: var(--fido2-shadow);
+    transition: box-shadow 0.3s ease;
+    margin-bottom: 1.5rem;
+}
+
+.fido2-card:hover {
+    box-shadow: var(--fido2-shadow-hover);
+}
+
+/* == Icons ========================================== */
+
+.fido2-icon {
+    font-size: 4rem;
+    color: var(--fido2-primary);
+    display: inline-block;
+    margin: 1.5rem auto;
+}
+
+/* == Typography ===================================== */
+
+.fido2-text {
+    color: var(--fido2-text-muted);
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.fido2-section-header {
+    margin-bottom: 1.5rem;
+}
+
+/* == Add Key Input Row ============================== */
+
+.fido2-add-key-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.fido2-device-input-group {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--fido2-border);
+    border-radius: var(--fido2-radius);
+    background: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fido2-device-input-group:focus-within {
+    border-color: var(--fido2-primary);
+    box-shadow: 0 0 0 3px rgba(47, 181, 210, 0.15);
+}
+
+.fido2-device-input-group .form-control {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    padding: 0.6rem 0.75rem 0.6rem 0.25rem;
+    font-size: 0.95rem;
+}
+
+.fido2-device-input-group .form-control:focus {
+    box-shadow: none;
+    border: none;
+}
+
+@media (max-width: 576px) {
+    .fido2-add-key-row {
+        flex-direction: column;
+    }
+
+    .fido2-add-key-row .btn {
+        width: 100%;
+    }
+}
+
+
+.fido2-section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--fido2-text);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* == Buttons ======================================== */
+
+.fido2-btn-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: var(--fido2-radius);
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* == Status Messages (Toasts) ======================= */
+
+.fido2-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: var(--fido2-radius);
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none;
+}
+
+.fido2-status.show {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.fido2-status-info {
+    border-left: 4px solid #17a2b8;
+}
+
+.fido2-status-success {
+    border-left: 4px solid #28a745;
+}
+
+.fido2-status-error {
+    border-left: 4px solid #dc3545;
+}
+
+.fido2-status i {
+    font-size: 24px;
+}
+
+.fido2-status-info i {
+    color: #17a2b8;
+}
+
+.fido2-status-success i {
+    color: #28a745;
+}
+
+.fido2-status-error i {
+    color: #dc3545;
+}
+
+/* == Manage Page: Grid Layout for Cards ============= */
+
+.fido2-key-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.fido2-key-card {
+    background: #fff;
+    border: 1px solid var(--fido2-border);
+    border-radius: var(--fido2-radius);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.fido2-key-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--fido2-shadow-hover);
+    border-color: #dae0e5;
+}
+
+.fido2-key-icon-wrapper {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--fido2-bg-light);
+    color: var(--fido2-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.fido2-key-icon-wrapper .material-icons {
+    font-size: 32px;
+}
+
+.fido2-key-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--fido2-text);
+    margin-bottom: 0.5rem;
+}
+
+.fido2-key-meta {
+    font-size: 0.85rem;
+    color: var(--fido2-text-muted);
+    margin-bottom: 1.5rem;
+}
+
+.fido2-key-actions {
+    margin-top: auto;
+    width: 100%;
+}
+
+/* == Manage Page: Empty State ======================= */
+
+.fido2-empty-state {
+    padding: 3rem;
+    text-align: center;
+    background: var(--fido2-bg-light);
+    border-radius: var(--fido2-radius);
+    color: var(--fido2-text-muted);
+}
+
+.fido2-empty-state .material-icons {
+    font-size: 4rem;
+    color: #dee2e6;
+    margin-bottom: 1rem;
+    display: inline-block;
+}
+
+.fido2-empty-state p {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--fido2-text);
+}
+
+.fido2-empty-hint {
+    margin-top: 0.5rem !important;
+    font-size: 0.9rem !important;
+    color: var(--fido2-text-muted) !important;
+}
+
+/* == Animations ===================================== */
+
+@keyframes fido2-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.rotating {
+    animation: fido2-spin 1.5s linear infinite;
+    display: inline-block;
+}

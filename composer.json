@@ -1,0 +1,37 @@
+{
+    "name": "prestashopcorp/fido2auth",
+    "description": "Advanced Security with FIDO2-based Multi-Factor Authentication.",
+    "type": "prestashop-module",
+    "authors": [
+        {
+            "name": "Muh. Zaki Erbai Syas",
+            "email": "muhzakierbaisyas@gmail.com"
+        }
+    ],
+    "license": "AFL-3.0",
+    "autoload": {
+        "classmap": [
+            "fido2auth.php"
+        ],
+        "psr-4": {
+            "PrestaShop\\Module\\Fido2Auth\\": "src/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "optimize-autoloader": true,
+        "prepend-autoloader": false,
+        "sort-packages": true,
+        "platform-check": false
+    },
+    "require": {
+        "php": ">=8.1",
+        "web-auth/webauthn-lib": "^4.9",
+        "web-auth/cose-lib": "^4.3",
+        "ramsey/uuid": "^4.7",
+        "nyholm/psr7": "^1.8",
+        "nyholm/psr7-server": "^1.1",
+        "psr/http-message": "^1.0|^2.0",
+        "brick/math": "^0.11.0"
+    }
+}
