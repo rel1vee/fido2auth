@@ -148,7 +148,7 @@ class AttestationValidator
         foreach ($excludeCredentials as $credId) {
             $excludeCreds[] = PublicKeyCredentialDescriptor::create(
                 'public-key',
-                $credId
+                $this->base64UrlDecode($credId)
             );
         }
 
