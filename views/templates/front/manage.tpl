@@ -1,14 +1,15 @@
 {extends file='customer/page.tpl'}
 
 {block name='page_title'}
-    <h1 class="page-title">{l s='Manage Security Keys' mod='fido2auth'}</h1>
+    <h1 class="page-title">
+        {l s='Manage Security Keys' mod='fido2auth'}
+    </h1>
 {/block}
 
 {block name='page_content'}
 <div class="fido2-container">
     <input type="hidden" id="fido2-manage-ajax-url" value="{$ajax_url}">
     <input type="hidden" id="fido2-reg-ajax-url" value="{$registration_ajax_url}">
-
     <div class="fido2-section-header">
         <div class="fido2-add-key-row">
             <div class="fido2-device-input-group">
@@ -22,9 +23,7 @@
             </button>
         </div>
     </div>
-
     <div id="manage-status" class="fido2-status"></div>
-
     {if $credentials}
         <div class="fido2-key-grid">
             {foreach from=$credentials item=credential}
@@ -36,7 +35,6 @@
                     <span class="fido2-key-meta">
                         {l s='Added on' mod='fido2auth'} {$credential.created_at|date_format:"%b %e, %Y"}
                     </span>
-                    
                     <div class="fido2-key-actions">
                          <button class="btn btn-outline-danger btn-sm delete-credential" data-id="{$credential.id}" title="{l s='Remove Key' mod='fido2auth'}">
                             <i class="material-icons" style="font-size: 16px; vertical-align: middle;">delete_outline</i>
