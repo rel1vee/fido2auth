@@ -52,16 +52,7 @@ class Fido2Registration {
       .replace(/=/g, "");
   }
 
-  base64UrlEncodePadded(arrayBuffer) {
-    const bytes = new Uint8Array(arrayBuffer);
-    let binary = "";
-    for (let i = 0; i < bytes.byteLength; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return btoa(binary)
-      .replace(/\+/g, "-")
-      .replace(/\//g, "_");
-  }
+
 
   base64UrlToUint8Array(base64url) {
     if (!base64url) return new Uint8Array();
@@ -118,11 +109,9 @@ class Fido2Registration {
     });
 
     const data = await response.json();
-
     if (!data.success) {
       throw new Error(data.message || "Failed to get registration options");
     }
-
     return data.options;
   }
 
@@ -161,13 +150,13 @@ class Fido2Registration {
         throw new Error("Failed to create credential");
       }
 
-      // Convert credential to JSON-serializable format
+      // Convert credential to JSON-serializable format (base64url without padding per WebAuthn spec)
       return {
         id: credential.id,
-        rawId: this.base64UrlEncodePadded(credential.rawId),
+        rawId: this.base64UrlEncode(credential.rawId),
         type: credential.type,
         response: {
-          attestationObject: this.base64UrlEncodePadded(
+          attestationObject: this.base64UrlEncode(
             credential.response.attestationObject
           ),
           clientDataJSON: this.base64UrlEncode(
@@ -177,7 +166,7 @@ class Fido2Registration {
       };
     } catch (err) {
       if (err.name === 'NotAllowedError') {
-        throw new Error("Operation cancelled or timed out.");
+        throw new Error("The operation cancelled or timed out.");
       }
       throw err;
     }
