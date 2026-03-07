@@ -63,7 +63,7 @@ class Fido2AuthRegistrationModuleFrontController extends ModuleFrontController
                     $this->getRegistrationOptions();
                     break;
                 case 'verify':
-                    $this->verifyRegistration();
+                    $this->verifyRegistration($postData);
                     break;
                 default:
                     throw new Exception('Invalid action');
@@ -133,7 +133,7 @@ class Fido2AuthRegistrationModuleFrontController extends ModuleFrontController
                 'excludeCredentials' => array_map(function ($cred) {
                     return [
                         'type' => $cred->getType(),
-                        'id' => $cred->getId(),
+                        'id' => rtrim(strtr(base64_encode($cred->getId()), '+/', '-_'), '='),
                     ];
                 }, $creationOptions->getExcludeCredentials()),
                 'authenticatorSelection' => [
@@ -157,7 +157,7 @@ class Fido2AuthRegistrationModuleFrontController extends ModuleFrontController
         }
     }
 
-    private function verifyRegistration()
+    private function verifyRegistration(array $data)
     {
         $customer = $this->context->customer;
 
@@ -169,10 +169,6 @@ class Fido2AuthRegistrationModuleFrontController extends ModuleFrontController
         }
 
         try {
-            // Get POST data
-            $postData = file_get_contents('php://input');
-            $data = json_decode($postData, true);
-
             if (!isset($data['credential']) || !isset($data['device_name'])) {
                 throw new Exception('Invalid request data');
             }
