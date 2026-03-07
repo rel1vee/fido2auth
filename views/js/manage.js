@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (type === "success" || type === "error") {
       setTimeout(() => {
         statusDiv.classList.remove('show');
-        // small delay to allow transition out before hiding
         setTimeout(() => statusDiv.style.display = "none", 300);
       }, 4000);
     }
