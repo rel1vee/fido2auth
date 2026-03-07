@@ -152,7 +152,7 @@ class Fido2Auth extends Module
         $helper->module = $this;
         $helper->name_controller = $this->name;
         $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->currentIndex = AdminController::$currentIndex . '&configure=' . $this->name;
+        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false) . '&configure=' . $this->name;
         $helper->title = $this->displayName;
         $helper->submit_action = 'submitFido2AuthConfig';
         $helper->fields_value['FIDO2AUTH_ENABLED'] = Configuration::get('FIDO2AUTH_ENABLED');
@@ -232,6 +232,9 @@ class Fido2Auth extends Module
             // For now, we mainly block standard account pages.
             
             if (in_array($controller->php_self, $protectedControllers)) {
+                // Save the page the user was trying to access for post-MFA redirect
+                $this->context->cookie->fido2_redirect_url = Tools::getHttpHost(true) . $_SERVER['REQUEST_URI'];
+                $this->context->cookie->write();
                 Tools::redirect($this->context->link->getModuleLink('fido2auth', 'authentication'));
             }
         }
@@ -249,12 +252,14 @@ class Fido2Auth extends Module
         if (!Configuration::get('FIDO2AUTH_ENABLED')) return;
 
         $controller = $this->context->controller;
-        if (
+        $isModulePage = (
             $controller instanceof Fido2AuthAuthenticationModuleFrontController ||
             $controller instanceof Fido2AuthRegistrationModuleFrontController ||
             $controller instanceof Fido2AuthManageModuleFrontController
-        ) {
+        );
+        $isLoginPage = ($controller->php_self === 'authentication');
 
+        if ($isModulePage || $isLoginPage) {
             $this->context->controller->registerStylesheet(
                 'module-fido2auth-style',
                 'modules/' . $this->name . '/views/css/front.css',
