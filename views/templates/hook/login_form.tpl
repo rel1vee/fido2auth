@@ -4,10 +4,10 @@
     <input type="hidden" id="fido2-login-ajax-url" value="{$fido2_auth_ajax_url}">
     
     <div style="font-style: italic; color: #6c757d; padding: 10px;">
-        <span>{l s='— or continue with —' mod='fido2auth'}</span>
+        {l s='— or continue with —' mod='fido2auth'}
     </div>
 
-    <button id="btn-fido2-inline-login" class="btn btn-secondary" type="button">
+    <button id="btn-fido2-inline-login" class="btn btn-secondary">
         <i class="material-icons">fingerprint</i>
         {l s='Passkey' mod='fido2auth'}
     </button>
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 const result = await fidoAuth.authenticate();
 
                 if (statusDiv) {
-                    statusDiv.innerHTML = 'Success...';
+                    statusDiv.innerHTML = 'OK!';
                     statusDiv.className = 'show';
                     statusDiv.style.display = 'flex';
                     statusDiv.style.alignItems = 'center'; 
@@ -62,9 +62,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 let friendlyMessage = error.message || 'Authentication Failed';
                 
                 if (error.name === 'NotAllowedError' || error.message.includes('cancel')) {
-                    friendlyMessage = "{l s='Cancelled...' mod='fido2auth'}";
+                    friendlyMessage = "{l s='The operation cancelled.' mod='fido2auth'}";
                 } else if (error.name === 'TimeoutError') {
-                    friendlyMessage = "{l s='Timeout...' mod='fido2auth'}";
+                    friendlyMessage = "{l s='The operation timed out.' mod='fido2auth'}";
                 }
 
                 if (statusDiv) {
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     statusDiv.style.display = 'flex';
                     statusDiv.style.alignItems = 'center'; 
                     statusDiv.style.justifyContent = 'center'; 
-                    statusDiv.style.textAlign = 'center'; 
+                    statusDiv.style.textAlign = 'center';
                     
                     setTimeout(() => { 
                         statusDiv.classList.remove('show');
