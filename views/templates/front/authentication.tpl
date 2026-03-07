@@ -9,17 +9,14 @@
 {block name='page_content'}
 <div class="fido2-container">
     <input type="hidden" id="fido2-auth-ajax-url" value="{$ajax_url}">
-
     <div class="fido2-card">
         <div id="auth-status" class="fido2-status" style="display: none;"></div>
-
         <i class="material-icons fido2-icon">fingerprint</i>
-
         <p class="fido2-text">
             {l s='Your account is protected with a passkey. Verify your identity to continue.' mod='fido2auth'}
         </p>
         <button id="fido2-auth-btn" class="btn btn-primary btn-lg fido2-btn-block">
-                <i class="material-icons" style="vertical-align: middle; margin-right: 6px; font-size: 20px;">verified_user</i>
+            <i class="material-icons" style="vertical-align: middle; margin-right: 6px; font-size: 20px;">verified_user</i>
             {l s='Verify Identity' mod='fido2auth'}
         </button>
     </div>
@@ -32,8 +29,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const authBtn = document.getElementById("fido2-auth-btn");
     const statusDiv = document.getElementById("auth-status");
     
-    // Always auto-trigger for MFA page
-    const isMfa = true; 
+    // Auto-trigger WebAuthn prompt when in MFA verification mode
+    const isMfa = {if $is_mfa_mode}true{else}false{/if};
 
     if (!ajaxUrl || !authBtn) return;
 
