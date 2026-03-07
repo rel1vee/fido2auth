@@ -120,7 +120,7 @@ class AssertionVerifier implements PublicKeyCredentialSourceRepository
         foreach ($allowCredentials as $credId) {
             $allowCreds[] = PublicKeyCredentialDescriptor::create(
                 'public-key',
-                $credId,
+                $this->base64UrlDecode($credId),
                 ['usb', 'nfc', 'ble', 'internal']
             );
         }
