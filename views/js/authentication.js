@@ -142,7 +142,7 @@ class Fido2Authentication {
       };
     } catch (err) {
       if (err.name === 'NotAllowedError') {
-        throw new Error("Operation cancelled or timed out.");
+        throw new Error("The operation cancelled or timed out.");
       }
       throw err;
     }
