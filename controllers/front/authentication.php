@@ -54,7 +54,7 @@ class Fido2AuthAuthenticationModuleFrontController extends ModuleFrontController
                     $this->getAuthenticationOptions($postData);
                     break;
                 case 'verify':
-                    $this->verifyAuthentication();
+                    $this->verifyAuthentication($postData);
                     break;
                 default:
                     throw new Exception('Invalid action');
@@ -110,7 +110,7 @@ class Fido2AuthAuthenticationModuleFrontController extends ModuleFrontController
             $optionsArray['allowCredentials'] = array_map(function ($cred) {
                 return [
                     'type' => $cred->getType(),
-                    'id' => $cred->getId(),
+                    'id' => rtrim(strtr(base64_encode($cred->getId()), '+/', '-_'), '='),
                     'transports' => $cred->getTransports(),
                 ];
             }, $requestOptions->getAllowCredentials());
@@ -122,11 +122,8 @@ class Fido2AuthAuthenticationModuleFrontController extends ModuleFrontController
         ]));
     }
 
-    private function verifyAuthentication()
+    private function verifyAuthentication(array $postData)
     {
-        $rawInput = file_get_contents('php://input');
-        $postData = json_decode($rawInput, true);
-
         if (!isset($postData['credential'])) throw new Exception('Invalid request data');
 
         $clientDataJSON = $this->module->getChallengeManager()->base64UrlDecode($postData['credential']['response']['clientDataJSON']);
@@ -171,15 +168,39 @@ class Fido2AuthAuthenticationModuleFrontController extends ModuleFrontController
         if ($this->context->customer->isLogged() && $this->context->customer->id == $customer->id) {
             // Case: User is logged in (Password), verifying MFA
             unset($this->context->cookie->fido2_mfa_pending);
+
+            // Dynamic redirect: return to the page user was trying to access
+            $redirectUrl = isset($this->context->cookie->fido2_redirect_url)
+                ? $this->context->cookie->fido2_redirect_url
+                : $this->context->link->getPageLink('my-account', true);
+            unset($this->context->cookie->fido2_redirect_url);
             $this->context->cookie->write();
         } else {
             // Case: User logging in via FIDO2 (Passwordless)
             $this->context->cookie->fido2_login_bypass = true;
 
+            // Save guest cart before login to preserve cart contents
+            $guestCartId = (int) $this->context->cart->id;
+            $guestCartProducts = [];
+            if ($guestCartId && $this->context->cart->nbProducts() > 0) {
+                $guestCartProducts = $this->context->cart->getProducts();
+            }
+
             // PrestaShop Login Flow
             $this->context->updateCustomer($customer);
 
-            // Important for cart retention
+            // Transfer guest cart products if they were lost during login
+            if (!empty($guestCartProducts) && $this->context->cart->nbProducts() === 0) {
+                foreach ($guestCartProducts as $product) {
+                    $this->context->cart->updateQty(
+                        (int) $product['cart_quantity'],
+                        (int) $product['id_product'],
+                        (int) $product['id_product_attribute']
+                    );
+                }
+            }
+
+            // Apply cart rules
             \CartRule::autoAddToCart($this->context);
 
             \Hook::exec('actionAuthentication', ['customer' => $customer]);
@@ -189,12 +210,14 @@ class Fido2AuthAuthenticationModuleFrontController extends ModuleFrontController
                 unset($this->context->cookie->fido2_mfa_pending);
             }
             $this->context->cookie->write();
+
+            $redirectUrl = $this->context->link->getPageLink('my-account', true);
         }
 
         die(json_encode([
             'success' => true,
             'message' => $this->module->l('Authentication successful'),
-            'redirect' => $this->context->link->getPageLink('index', true)
+            'redirect' => $redirectUrl
         ]));
     }
 
