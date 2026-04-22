@@ -109,15 +109,26 @@
     border: none;
 }
 
-@media (max-width: 576px) {
+@media (max-width: 768px) {
     .fido2-add-key-row {
         flex-direction: column;
+        align-items: stretch;
     }
 
     .fido2-add-key-row .btn {
         width: 100%;
     }
+
+    .fido2-device-input-group {
+        width: 100%;
+    }
+
+    .fido2-device-input-group .form-control {
+        width: 100%;
+    }
 }
+
+/* == Login Page: Passkey Inline Button =============== */
 
 .fido2-section-title {
     font-size: 1.5rem;
