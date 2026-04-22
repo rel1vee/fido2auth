@@ -62,7 +62,7 @@ class Fido2Authentication {
       const credential = await this.getCredential(options);
       return await this.verifyAuthentication(credential);
     } catch (error) {
-      console.error("FIDO2 Error:", error);
+      console.error(error);
       throw error;
     } finally {
       this.isAuthenticating = false;
@@ -87,9 +87,9 @@ class Fido2Authentication {
     try {
       data = JSON.parse(text);
     } catch (e) {
-      console.error("Server Response Invalid JSON:", text);
+      console.error("Server Response:", text);
       throw new Error(
-        "Server Error: Invalid response. Please check console for details."
+        "Invalid server response. Check console for details."
       );
     }
 
