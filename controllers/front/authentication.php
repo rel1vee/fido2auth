@@ -35,8 +35,10 @@ class Fido2AuthAuthenticationModuleFrontController extends ModuleFrontController
 
     public function postProcess()
     {
-        if (!$this->ajax) return;
-        if (ob_get_length()) ob_clean();
+        if (!$this->ajax)
+            return;
+        if (ob_get_length())
+            ob_clean();
         header('Content-Type: application/json');
 
         $rawInput = file_get_contents('php://input');
@@ -72,12 +74,12 @@ class Fido2AuthAuthenticationModuleFrontController extends ModuleFrontController
         $customerId = null;
 
         if ($this->context->customer->isLogged() && isset($this->context->cookie->fido2_mfa_pending)) {
-            $customerId = (int)$this->context->customer->id;
+            $customerId = (int) $this->context->customer->id;
         } elseif ($email) {
             $customer = new Customer();
             $customer->getByEmail($email);
             if (Validate::isLoadedObject($customer)) {
-                $customerId = (int)$customer->id;
+                $customerId = (int) $customer->id;
             }
         }
 
@@ -124,7 +126,8 @@ class Fido2AuthAuthenticationModuleFrontController extends ModuleFrontController
 
     private function verifyAuthentication(array $postData)
     {
-        if (!isset($postData['credential'])) throw new Exception('Invalid request data');
+        if (!isset($postData['credential']))
+            throw new Exception('Invalid request data');
 
         $clientDataJSON = $this->module->getChallengeManager()->base64UrlDecode($postData['credential']['response']['clientDataJSON']);
         $clientData = json_decode($clientDataJSON, true);
@@ -154,7 +157,8 @@ class Fido2AuthAuthenticationModuleFrontController extends ModuleFrontController
         $credentialManager = $this->module->getCredentialManager();
         $credential = $credentialManager->getCredential($validatedAssertion['credential_id']);
 
-        if (!$credential) throw new Exception('Credential not found');
+        if (!$credential)
+            throw new Exception('Credential not found');
 
         $credentialManager->updateCredentialUsage($credential, $validatedAssertion['sign_count']);
         $this->module->getChallengeManager()->consumeChallenge($challengeString);
