@@ -41,8 +41,10 @@ class Fido2AuthManageModuleFrontController extends ModuleFrontController
 
     public function postProcess()
     {
-        if (!$this->ajax) return;
-        if (ob_get_length()) ob_clean();
+        if (!$this->ajax)
+            return;
+        if (ob_get_length())
+            ob_clean();
         header('Content-Type: application/json');
 
         $rawInput = file_get_contents('php://input');
@@ -89,7 +91,7 @@ class Fido2AuthManageModuleFrontController extends ModuleFrontController
 
         try {
             $credentialManager = $this->module->getCredentialManager();
-            $credentials = $credentialManager->getCustomerCredentials((int)$customer->id);
+            $credentials = $credentialManager->getCustomerCredentials((int) $customer->id);
 
             $credentialList = array_map(function ($cred) {
                 return $cred->toArray();
@@ -128,14 +130,14 @@ class Fido2AuthManageModuleFrontController extends ModuleFrontController
             $credentialManager = $this->module->getCredentialManager();
 
             // Check if this is the last credential
-            $count = $credentialManager->countCredentials((int)$customer->id);
+            $count = $credentialManager->countCredentials((int) $customer->id);
 
             if ($count <= 1 && Configuration::get('FIDO2AUTH_REQUIRE_MFA')) {
                 throw new Exception('Cannot delete the last security key when MFA is required');
             }
 
             // Delete credential
-            $result = $credentialManager->deleteCredential($credentialId, (int)$customer->id);
+            $result = $credentialManager->deleteCredential($credentialId, (int) $customer->id);
 
             if ($result) {
                 die(json_encode([
@@ -177,7 +179,7 @@ class Fido2AuthManageModuleFrontController extends ModuleFrontController
             }
 
             $credentialManager = $this->module->getCredentialManager();
-            $result = $credentialManager->updateDeviceName($credentialId, (int)$customer->id, $deviceName);
+            $result = $credentialManager->updateDeviceName($credentialId, (int) $customer->id, $deviceName);
 
             if ($result) {
                 die(json_encode([
@@ -203,7 +205,7 @@ class Fido2AuthManageModuleFrontController extends ModuleFrontController
 
         // Get existing credentials
         $credentialManager = $this->module->getCredentialManager();
-        $credentials = $credentialManager->getCustomerCredentials((int)$customer->id);
+        $credentials = $credentialManager->getCustomerCredentials((int) $customer->id);
 
         $this->context->smarty->assign([
             'credentials' => array_map(function ($cred) {
