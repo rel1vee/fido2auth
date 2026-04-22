@@ -117,7 +117,20 @@ class Fido2Auth extends Module
             Configuration::updateValue('FIDO2AUTH_TIMEOUT', (int) Tools::getValue('FIDO2AUTH_TIMEOUT'));
             $output .= $this->displayConfirmation($this->l('Settings updated'));
         }
-        return $output . $this->displayForm();
+
+        if (Tools::isSubmit('reset_fido2_customer')) {
+            $id_customer = (int) Tools::getValue('reset_fido2_customer');
+            if ($id_customer) {
+                Db::getInstance()->update(
+                    'fido2_credentials',
+                    ['is_active' => 0],
+                    'id_customer = ' . $id_customer
+                );
+                $output .= $this->displayConfirmation(sprintf($this->l('FIDO2 credentials successfully reset for customer #%d.'), $id_customer));
+            }
+        }
+
+        return $output . $this->displayForm() . $this->renderFido2CustomersList();
     }
 
     protected function displayForm(): string
@@ -160,6 +173,69 @@ class Fido2Auth extends Module
         $helper->fields_value['FIDO2AUTH_TIMEOUT'] = Configuration::get('FIDO2AUTH_TIMEOUT');
 
         return $helper->generateForm([$fieldsForm]);
+    }
+
+    protected function renderFido2CustomersList(): string
+    {
+        $sql = 'SELECT c.`id_customer`, c.`firstname`, c.`lastname`, c.`email`, COUNT(f.`id_fido2_credential`) as `total_keys`
+                FROM `' . _DB_PREFIX_ . 'fido2_credentials` f
+                JOIN `' . _DB_PREFIX_ . 'customer` c ON c.`id_customer` = f.`id_customer`
+                WHERE f.`is_active` = 1
+                GROUP BY c.`id_customer`';
+
+        $customers = Db::getInstance()->executeS($sql);
+
+        if (!$customers) {
+            return '<div class="panel"><h3><i class="icon-group"></i> ' . $this->l('FIDO2 Customers') . '</h3><p>' . $this->l('No customers have active FIDO2 credentials yet.') . '</p></div>';
+        }
+
+        $fields_list = [
+            'id_customer' => [
+                'title' => $this->l('ID'),
+                'align' => 'center',
+                'class' => 'fixed-width-xs',
+            ],
+            'firstname' => [
+                'title' => $this->l('First Name'),
+            ],
+            'lastname' => [
+                'title' => $this->l('Last Name'),
+            ],
+            'email' => [
+                'title' => $this->l('Email'),
+            ],
+            'total_keys' => [
+                'title' => $this->l('Active Passkeys'),
+                'align' => 'center',
+                'class' => 'fixed-width-sm',
+            ],
+        ];
+
+        $helper = new HelperList();
+        $helper->shopLinkType = '';
+        $helper->simple_header = false;
+        $helper->identifier = 'id_customer';
+        $helper->actions = ['resetFido2'];
+        $helper->show_toolbar = false;
+        $helper->title = $this->l('Customers with Active FIDO2 Credentials');
+        $helper->table = 'fido2_customer';
+        $helper->module = $this;
+
+        $helper->token = Tools::getAdminTokenLite('AdminModules');
+        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false) . '&configure=' . $this->name;
+
+        return $helper->generateList($customers, $fields_list);
+    }
+
+    public function displayResetFido2Link($token, $id, $name = null): string
+    {
+        $url = $this->context->link->getAdminLink('AdminModules', true) . '&configure=' . $this->name . '&reset_fido2_customer=' . (int) $id;
+
+        return '
+            <a href="' . $url . '" class="btn btn-default" title="' . $this->l('Reset FIDO2') . '" onclick="return confirm(\'' . $this->l('Are you sure you want to reset all FIDO2 credentials for this customer? They will need to register a new passkey or use password login.') . '\');">
+                <i class="icon-trash"></i> ' . $this->l('Reset') . '
+            </a>
+        ';
     }
 
     /**
