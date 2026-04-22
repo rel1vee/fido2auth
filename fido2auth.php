@@ -167,7 +167,8 @@ class Fido2Auth extends Module
      */
     public function hookActionAuthentication($params): void
     {
-        if (!Configuration::get('FIDO2AUTH_ENABLED')) return;
+        if (!Configuration::get('FIDO2AUTH_ENABLED'))
+            return;
 
         // If login via Passwordless (FIDO2 Controller), ignore this hook
         // to prevent infinite loops or re-triggering MFA
@@ -178,9 +179,10 @@ class Fido2Auth extends Module
         }
 
         $customer = $params['customer'];
-        if (!$this->credentialManager) $this->initializeServices();
+        if (!$this->credentialManager)
+            $this->initializeServices();
 
-        if ($this->credentialManager && $this->credentialManager->hasCredentials((int)$customer->id)) {
+        if ($this->credentialManager && $this->credentialManager->hasCredentials((int) $customer->id)) {
             $this->context->cookie->fido2_mfa_pending = true;
             $this->context->cookie->write();
         }
@@ -192,7 +194,8 @@ class Fido2Auth extends Module
      */
     public function hookActionFrontControllerSetMedia($params): void
     {
-        if (!Configuration::get('FIDO2AUTH_ENABLED')) return;
+        if (!Configuration::get('FIDO2AUTH_ENABLED'))
+            return;
 
         if (
             $this->context->customer->isLogged() &&
@@ -201,7 +204,7 @@ class Fido2Auth extends Module
         ) {
 
             $controller = $this->context->controller;
-            
+
             // Allow MFA controller and Login/Password controllers
             if (
                 $controller instanceof Fido2AuthAuthenticationModuleFrontController ||
@@ -230,7 +233,7 @@ class Fido2Auth extends Module
 
             // If it's a module front controller, it might also be protected, but let's be selective
             // For now, we mainly block standard account pages.
-            
+
             if (in_array($controller->php_self, $protectedControllers)) {
                 // Save the page the user was trying to access for post-MFA redirect
                 $this->context->cookie->fido2_redirect_url = Tools::getHttpHost(true) . $_SERVER['REQUEST_URI'];
@@ -242,14 +245,16 @@ class Fido2Auth extends Module
 
     public function hookDisplayCustomerAccount()
     {
-        if (!Configuration::get('FIDO2AUTH_ENABLED')) return '';
+        if (!Configuration::get('FIDO2AUTH_ENABLED'))
+            return '';
         $this->context->smarty->assign(['fido2_manage_url' => $this->context->link->getModuleLink('fido2auth', 'manage', [], true)]);
         return $this->display(__FILE__, 'views/templates/hook/customer_account.tpl');
     }
 
     public function hookDisplayHeader()
     {
-        if (!Configuration::get('FIDO2AUTH_ENABLED')) return;
+        if (!Configuration::get('FIDO2AUTH_ENABLED'))
+            return;
 
         $controller = $this->context->controller;
         $isModulePage = (
@@ -270,7 +275,8 @@ class Fido2Auth extends Module
 
     public function hookDisplayCustomerLoginFormAfter($params)
     {
-        if (!Configuration::get('FIDO2AUTH_ENABLED')) return '';
+        if (!Configuration::get('FIDO2AUTH_ENABLED'))
+            return '';
         $this->context->smarty->assign([
             'fido2_auth_url' => $this->context->link->getModuleLink('fido2auth', 'authentication', [], true),
             'fido2_auth_ajax_url' => $this->context->link->getModuleLink('fido2auth', 'authentication', [], true),
@@ -280,13 +286,15 @@ class Fido2Auth extends Module
 
     public function getChallengeManager(): ?ChallengeManager
     {
-        if (!$this->challengeManager) $this->initializeServices();
+        if (!$this->challengeManager)
+            $this->initializeServices();
         return $this->challengeManager;
     }
 
     public function getCredentialManager(): ?CredentialManager
     {
-        if (!$this->credentialManager) $this->initializeServices();
+        if (!$this->credentialManager)
+            $this->initializeServices();
         return $this->credentialManager;
     }
 }
