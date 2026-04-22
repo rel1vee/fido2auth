@@ -42,7 +42,7 @@ class ChallengeManager
 
         // User handle must be consistent for the same customer ID.
         // We use SHA-256 of the customer ID so the length is fixed and the raw ID is not exposed.
-        $userHandle = $this->base64UrlEncode(hash('sha256', (string)$customerId, true));
+        $userHandle = $this->base64UrlEncode(hash('sha256', (string) $customerId, true));
 
         // Create challenge entity
         $challengeEntity = new Fido2Challenge();
