@@ -73,7 +73,7 @@ class ChallengeRepository
 
     public function deleteUsedOlderThan(int $hours): bool
     {
-        return Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . $this->table . '` WHERE used = 1 AND created_at < DATE_SUB(NOW(), INTERVAL ' . (int)$hours . ' HOUR)');
+        return Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . $this->table . '` WHERE used = 1 AND created_at < DATE_SUB(NOW(), INTERVAL ' . (int) $hours . ' HOUR)');
     }
 
     private function hydrate(array $row): Fido2Challenge
