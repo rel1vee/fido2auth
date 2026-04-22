@@ -44,8 +44,10 @@ class Fido2AuthRegistrationModuleFrontController extends ModuleFrontController
 
     public function postProcess()
     {
-        if (!$this->ajax) return;
-        if (ob_get_length()) ob_clean();
+        if (!$this->ajax)
+            return;
+        if (ob_get_length())
+            ob_clean();
         header('Content-Type: application/json');
 
         $rawInput = file_get_contents('php://input');
@@ -91,10 +93,10 @@ class Fido2AuthRegistrationModuleFrontController extends ModuleFrontController
             $credentialManager = $this->module->getCredentialManager();
 
             // Generate challenge
-            $challengeData = $challengeManager->generateRegistrationChallenge((int)$customer->id);
+            $challengeData = $challengeManager->generateRegistrationChallenge((int) $customer->id);
 
             // Get existing credentials to exclude
-            $excludeCredentials = $credentialManager->getCustomerCredentialIds((int)$customer->id);
+            $excludeCredentials = $credentialManager->getCustomerCredentialIds((int) $customer->id);
 
             // Create attestation validator
             $rpId = $this->getRpId();
@@ -179,7 +181,7 @@ class Fido2AuthRegistrationModuleFrontController extends ModuleFrontController
                 $deviceName = 'Unknown Device';
             }
             if (!Validate::isGenericName($deviceName)) {
-                 throw new Exception('Invalid device name. Only letters, numbers and generic characters allowed.');
+                throw new Exception('Invalid device name. Only letters, numbers and generic characters allowed.');
             }
 
             // Get services
@@ -197,7 +199,7 @@ class Fido2AuthRegistrationModuleFrontController extends ModuleFrontController
             );
 
             // Verify it belongs to this customer
-            if ($challengeEntity->getCustomerId() !== (int)$customer->id) {
+            if ($challengeEntity->getCustomerId() !== (int) $customer->id) {
                 throw new Exception('Challenge does not belong to this customer');
             }
 
@@ -235,7 +237,7 @@ class Fido2AuthRegistrationModuleFrontController extends ModuleFrontController
 
             // Register credential
             $credential = $credentialManager->registerCredential(
-                (int)$customer->id,
+                (int) $customer->id,
                 $validatedCredential['credential_id'],
                 $validatedCredential['public_key_pem'],
                 $validatedCredential['attestation_type'],
