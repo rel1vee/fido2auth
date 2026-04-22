@@ -192,8 +192,8 @@ class Fido2Registration {
     try {
       data = JSON.parse(text);
     } catch (e) {
-      console.error("Server Raw Response:", text);
-      throw new Error("Server returned invalid JSON. Check console for details.");
+      console.error("Server Response:", text);
+      throw new Error("Invalid server response. Check console for details.");
     }
 
     if (!data.success) {
