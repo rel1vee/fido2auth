@@ -8,7 +8,7 @@
 
 An open-source PrestaShop module that implements **FIDO2/WebAuthn-based Multi-Factor Authentication (MFA)** and **Passwordless Login** for e-commerce customers. Built on the W3C WebAuthn Level 2 standard and FIDO2 specification, this module enables phishing-resistant authentication using hardware security keys, platform biometrics, and cross-device passkeys — all integrated **non-invasively** through PrestaShop's native hook system.
 
-> **Research Context:** This module was developed as part of a research study on e-commerce authentication security. The accompanying research paper is published at [COMING SOON...]. The module is freely available as an open-source contribution to the PrestaShop community.
+> **Research Context:** This module was developed as part of a research study on e-commerce authentication security. The accompanying research paper is published at https://everant.org/index.php/etj/article/view/2731. The module is freely available as an open-source contribution to the PrestaShop community.
 
 ---
 
@@ -47,8 +47,8 @@ An open-source PrestaShop module that implements **FIDO2/WebAuthn-based Multi-Fa
 
 | Type | Examples |
 |------|----------|
-| **Platform Authenticators** | Windows Hello (fingerprint/face/PIN), macOS Touch ID, Android Biometrics |
-| **Roaming Authenticators** | YubiKey, Google Titan Key, SoloKeys, Feitian FIDO keys |
+| **Platform Authenticators** | Windows Hello, macOS Touch ID, Android Biometrics |
+| **Roaming Authenticators** | YubiKey, Google Titan Key, SoloKeys, Feitian |
 | **Cross-Device Passkeys** | Synced passkeys via iCloud Keychain, Google Password Manager |
 
 ### Key Capabilities
